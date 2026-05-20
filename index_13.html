@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1A1A18">
+<title>Interproj — Registro de Produção</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:#F5F4F0;min-height:100vh}
+.pg{display:none;max-width:480px;margin:0 auto;padding-bottom:40px}
+.pg.ativo{display:block}
+.hdr{background:#1A1A18;color:#fff;padding:20px 20px 16px}
+.logo{font-size:13px;font-weight:700;letter-spacing:.15em;color:#E8C547}
+.titulo{font-size:18px;font-weight:500;margin:6px 0 0;color:#fff}
+.card{background:#fff;margin:12px;border-radius:12px;padding:16px;border:1px solid #E5E4E0}
+.ctitle{font-size:14px;font-weight:700;margin:0 0 16px;color:#1A1A18;text-transform:uppercase;letter-spacing:.05em}
+label{display:block;font-size:11px;font-weight:700;color:#666;margin:12px 0 4px;text-transform:uppercase;letter-spacing:.05em}
+select,input{width:100%;padding:11px 12px;font-size:15px;border:1.5px solid #E0DFD8;border-radius:8px;background:#FAFAF8;font-family:inherit;color:#1A1A18;appearance:none;-webkit-appearance:none;outline:none}
+.btn{display:block;width:100%;padding:14px;font-size:15px;font-weight:700;background:#E8C547;color:#1A1A18;border:none;border-radius:10px;cursor:pointer;margin-top:16px;text-align:center}
+.btn-sec{background:#fff;color:#1A1A18;border:1.5px solid #E0DFD8;padding:14px 20px;font-size:14px;font-weight:600;border-radius:10px;cursor:pointer;margin-top:16px}
+.btn-add{width:calc(100% - 24px);margin:8px 12px 0;padding:12px;font-size:14px;font-weight:600;background:transparent;color:#1A1A18;border:2px dashed #D0CFC8;border-radius:10px;cursor:pointer;display:block}
+.btn-rem{font-size:11px;color:#E05555;background:none;border:none;cursor:pointer;font-weight:600}
+.btn-exp{width:100%;padding:13px;font-size:14px;font-weight:700;background:#1A1A18;color:#E8C547;border:none;border-radius:10px;cursor:pointer;margin-top:12px;display:block}
+.flex{display:flex;gap:12px;margin:16px 12px 0}
+.flex .btn{margin-top:0}
+.flex .btn-sec{margin-top:0}
+.ctx{display:flex;justify-content:space-between;padding:8px 16px;background:#fff;border-bottom:1px solid #E5E4E0;margin-bottom:12px}
+.ctx span{font-size:12px;color:#666;font-weight:500}
+.icard{background:#fff;margin:0 12px 10px;border-radius:12px;padding:16px;border:1px solid #E5E4E0}
+.icard-hdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.inum{font-size:12px;font-weight:700;color:#999;text-transform:uppercase}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.srow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0EFE8}
+.sl{font-size:13px;color:#888}.sv{font-size:13px;font-weight:600;color:#1A1A18}
+.si{padding:10px 0;border-top:1px solid #F0EFE8}.si:first-child{border:none}
+.sitop{display:flex;justify-content:space-between}
+.siserv{font-size:14px;font-weight:600;color:#1A1A18;flex:1}
+.siqtd{font-size:14px;font-weight:700;color:#1A5C3A;margin-left:12px}
+.tags{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.tag{font-size:11px;background:#F0EFE8;color:#555;padding:2px 8px;border-radius:20px;font-weight:600}
+.sucbox{background:#fff;margin:40px 20px 0;border-radius:16px;padding:32px 24px;text-align:center;border:1px solid #E5E4E0}
+.sucico{width:56px;height:56px;border-radius:50%;background:#4CAF82;color:#fff;font-size:24px;font-weight:700;display:flex;align-items:center;justify-content:center;margin:0 auto 16px}
+.suctit{font-size:22px;font-weight:700;color:#1A1A18;margin-bottom:8px}
+.sucsub{font-size:14px;color:#888;margin:4px 0}
+.expcard{background:#fff;margin:12px 12px 0;border-radius:12px;padding:16px;border:2px solid #E8C547}
+.exptit{font-size:14px;font-weight:700;color:#1A1A18;margin-bottom:4px}
+.expsub{font-size:12px;color:#888}
+.expdica{font-size:12px;color:#666;margin-top:10px;background:#F5F4F0;border-radius:8px;padding:8px 12px;line-height:1.5}
+.rcard{background:#fff;margin:8px 12px;border-radius:10px;padding:12px;border:1px solid #E5E4E0}
+.sec{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.05em;padding:0 16px;margin-top:16px;display:block}
+</style>
+</head>
+<body>
+
+<!-- PÁGINA 0: IDENTIFICAÇÃO -->
+<div class="pg ativo" id="pg0">
+  <div class="hdr">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="logo">INTERPROJ</span>
+      <span style="font-size:11px;background:#333;color:#ccc;padding:2px 8px;border-radius:20px">Campo</span>
+    </div>
+    <p class="titulo">Registro de Produção Diária</p>
+  </div>
+  <div class="card">
+    <p class="ctitle">Identificação</p>
+    <label>Equipe</label>
+    <select id="s-equipe">
+      <option value="">Selecione a equipe...</option>
+      <option>ADM/APOIO</option><option>Segurança</option><option>Cobé</option><option>Ivan</option>
+      <option>Adailton e Marcelo</option><option>Wedson e Rodrigues</option><option>Poço do Elevador</option>
+      <option>Marciel e Arlindo</option><option>Manoel Gorgonho</option><option>Fachada 01</option>
+      <option>Fachada 02</option><option>Fachada 04</option><option>Fachada 05</option>
+      <option>Fachada 06</option><option>Fachada 07</option><option>Tratamento Garagens</option>
+      <option>Logística</option><option>Abastecimento</option><option>Escadas</option>
+    </select>
+    <label>Data</label>
+    <input type="date" id="s-data">
+    <label>Seu nome</label>
+    <input type="text" id="s-nome" placeholder="Quem está registrando..." autocomplete="off">
+    <button class="btn" onclick="irPara1()">Continuar →</button>
+  </div>
+</div>
+
+<!-- PÁGINA 1: SERVIÇOS -->
+<div class="pg" id="pg1">
+  <div class="hdr">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="logo">INTERPROJ</span>
+      <span style="font-size:11px;background:#333;color:#ccc;padding:2px 8px;border-radius:20px">Campo</span>
+    </div>
+    <p class="titulo">Registro de Produção Diária</p>
+  </div>
+  <div class="ctx"><span id="ctx-equipe"></span><span id="ctx-data"></span></div>
+  <div id="lista-itens"></div>
+  <button class="btn-add" onclick="adicionarItem()">+ Adicionar serviço</button>
+  <div class="flex">
+    <button class="btn-sec" onclick="irPara0()">← Voltar</button>
+    <button class="btn" onclick="irPara2()">Revisar →</button>
+  </div>
+</div>
+
+<!-- PÁGINA 2: RESUMO -->
+<div class="pg" id="pg2">
+  <div class="hdr">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span class="logo">INTERPROJ</span>
+      <span style="font-size:11px;background:#333;color:#ccc;padding:2px 8px;border-radius:20px">Campo</span>
+    </div>
+    <p class="titulo">Registro de Produção Diária</p>
+  </div>
+  <div class="ctx"><span id="ctx2-equipe"></span><span id="ctx2-data"></span></div>
+  <div id="resumo-conteudo"></div>
+  <div class="flex" style="margin:0 12px">
+    <button class="btn-sec" onclick="irPara1()">← Editar</button>
+    <button class="btn" id="btn-confirmar" onclick="confirmarEnvio()">✓ Confirmar envio</button>
+  </div>
+</div>
+
+<!-- PÁGINA 3: ENVIADO -->
+<div class="pg" id="pg3">
+  <div id="enviado-conteudo"></div>
+</div>
+
+<script>
+// ── ESTADO ────────────────────────────────────────────────────────────────
+var equipe="", dataSel="", nome="", itens=[], registros=[], exportado=false;
+
+// ── INIT ──────────────────────────────────────────────────────────────────
+document.getElementById("s-data").value = new Date().toISOString().split("T")[0];
+adicionarItem();
+
+// ── NAVEGAÇÃO ─────────────────────────────────────────────────────────────
+function mostrar(id){
+  document.querySelectorAll(".pg").forEach(function(p){p.classList.remove("ativo");});
+  document.getElementById(id).classList.add("ativo");
+  window.scrollTo(0,0);
+}
+
+function irPara0(){ mostrar("pg0"); }
+
+function irPara1(){
+  equipe = document.getElementById("s-equipe").value;
+  dataSel = document.getElementById("s-data").value;
+  nome = document.getElementById("s-nome").value.trim();
+  if(!equipe){ alert("Selecione a equipe!"); return; }
+  if(!nome){ alert("Digite seu nome!"); return; }
+  document.getElementById("ctx-equipe").textContent = equipe;
+  document.getElementById("ctx-data").textContent = formatarData(dataSel);
+  mostrar("pg1");
+}
+
+function irPara2(){
+  lerItens();
+  for(var i=0;i<itens.length;i++){
+    if(!itens[i].servico){ alert("Serviço "+(i+1)+": selecione o tipo!"); return; }
+    if(!itens[i].pavimento){ alert("Serviço "+(i+1)+": selecione o pavimento!"); return; }
+    if(!itens[i].quantidade||parseFloat(itens[i].quantidade)<=0){ alert("Serviço "+(i+1)+": informe a quantidade!"); return; }
+  }
+  document.getElementById("ctx2-equipe").textContent = equipe;
+  document.getElementById("ctx2-data").textContent = formatarData(dataSel);
+  construirResumo();
+  mostrar("pg2");
+}
+
+// ── ITENS ─────────────────────────────────────────────────────────────────
+var contadorId = 0;
+
+function adicionarItem(){
+  lerItens();
+  contadorId++;
+  itens.push({id:"it"+contadorId, servico:"", servicoCustom:"", pavimento:"", unidade:"m²", quantidade:"", obs:""});
+  renderizarItens();
+}
+
+function removerItem(id){
+  lerItens();
+  itens = itens.filter(function(i){ return i.id !== id; });
+  renderizarItens();
+}
+
+function lerItens(){
+  var cards = document.querySelectorAll(".icard");
+  cards.forEach(function(card, idx){
+    if(!itens[idx]) return;
+    var sv = card.querySelector("[name='servico']");
+    var sc = card.querySelector("[name='servicoCustom']");
+    var pv = card.querySelector("[name='pavimento']");
+    var un = card.querySelector("[name='unidade']");
+    var qt = card.querySelector("[name='quantidade']");
+    var ob = card.querySelector("[name='obs']");
+    if(sv) itens[idx].servico = sv.value;
+    if(sc) itens[idx].servicoCustom = sc.value;
+    if(pv) itens[idx].pavimento = pv.value;
+    if(un) itens[idx].unidade = un.value;
+    if(qt) itens[idx].quantidade = qt.value;
+    if(ob) itens[idx].obs = ob.value;
+  });
+}
+
+function onServicoChange(select, idx){
+  lerItens();
+  itens[idx].servico = select.value;
+  renderizarItens();
+}
+
+function renderizarItens(){
+  var html = "";
+  itens.forEach(function(it, idx){
+    html += '<div class="icard">';
+    html += '<div class="icard-hdr"><span class="inum">Serviço '+(idx+1)+'</span>';
+    if(itens.length > 1) html += '<button class="btn-rem" onclick="removerItem(\''+it.id+'\')">✕ remover</button>';
+    html += '</div>';
+    html += '<label>Tipo de serviço</label>';
+    html += '<select name="servico" onchange="onServicoChange(this,'+idx+')">';
+    html += '<option value="">Selecione...</option>';
+    ["Reboco interno","Chapisco","Emestramento","Capiaço","Alvenaria interna","Alvenaria externa","Revestimento cerâmico","Contra piso","Forro","Reboco fachada","Tratamento de concreto","Serviços de liberação de gesso","Abertura de nicho","Serviços hidrossanitários","Serviços elétricos","Serviços de acabamento","Outro"].forEach(function(s){
+      html += '<option'+(it.servico===s?' selected':'')+'>'+s+'</option>';
+    });
+    html += '</select>';
+    if(it.servico === "Outro"){
+      html += '<label>Descreva o serviço</label>';
+      html += '<input type="text" name="servicoCustom" value="'+it.servicoCustom+'" placeholder="Ex: Emboço área molhada" autocomplete="off">';
+    }
+    html += '<label>Pavimento / local</label>';
+    html += '<select name="pavimento">';
+    html += '<option value="">Selecione...</option>';
+    ["Térreo","Garagem","Pav. 1","Pav. 2","Pav. 3","Pav. 4","Pav. 5","Pav. 6","Pav. 7","Pav. 8","Pav. 9","Pav. 10","Pav. 11","Pav. 12","Pav. 13","Pav. 14","Pav. 15","Pav. 16","Pav. 17","Pav. 18","Pav. 19","Pav. 20","Pav. 21","Pav. 22","Pav. 23","Pav. 24","Pav. 25","Pav. 26","Pav. 27","Pav. 28","Cobertura","Área externa","Fachada"].forEach(function(p){
+      html += '<option'+(it.pavimento===p?' selected':'')+'>'+p+'</option>';
+    });
+    html += '</select>';
+    html += '<div class="grid2">';
+    html += '<div><label>Quantidade</label><input type="number" name="quantidade" inputmode="decimal" placeholder="0" value="'+it.quantidade+'" autocomplete="off"></div>';
+    html += '<div><label>Unidade</label><select name="unidade">';
+    ["m²","m","un","vb","diária","pct"].forEach(function(u){
+      html += '<option'+(it.unidade===u?' selected':'')+'>'+u+'</option>';
+    });
+    html += '</select></div></div>';
+    html += '<label>Observações <span style="font-weight:400;color:#999">(opcional)</span></label>';
+    html += '<input type="text" name="obs" value="'+it.obs+'" placeholder="Ex: apartamento 1402..." autocomplete="off">';
+    html += '</div>';
+  });
+  document.getElementById("lista-itens").innerHTML = html;
+}
+
+// ── RESUMO ────────────────────────────────────────────────────────────────
+function construirResumo(){
+  var html = '<div class="card"><p class="ctitle">Resumo do registro</p>';
+  html += '<div class="srow"><span class="sl">Responsável</span><span class="sv">'+nome+'</span></div>';
+  html += '<div class="srow"><span class="sl">Equipe</span><span class="sv">'+equipe+'</span></div>';
+  html += '<div class="srow"><span class="sl">Data</span><span class="sv">'+formatarData(dataSel)+'</span></div>';
+  html += '<div class="srow" style="border:none"><span class="sl">Serviços</span><span class="sv">'+itens.length+'</span></div></div>';
+  html += '<div class="card"><p class="ctitle">Serviços executados</p>';
+  itens.forEach(function(it){
+    var nomeServ = it.servico === "Outro" ? it.servicoCustom : it.servico;
+    html += '<div class="si"><div class="sitop"><span class="siserv">'+nomeServ+'</span><span class="siqtd">'+it.quantidade+' '+it.unidade+'</span></div>';
+    html += '<div class="tags"><span class="tag">'+it.pavimento+'</span>';
+    if(it.obs) html += '<span class="tag" style="background:#FFF8E1;color:#7A5C00">'+it.obs+'</span>';
+    html += '</div></div>';
+  });
+  html += '</div>';
+  document.getElementById("resumo-conteudo").innerHTML = html;
+}
+
+// ── CONFIRMAR ─────────────────────────────────────────────────────────────
+function confirmarEnvio(){
+  var reg = {
+    id: Date.now(),
+    equipe: equipe,
+    data: dataSel,
+    responsavel: nome,
+    itens: itens.map(function(i){
+      return {servico:i.servico, pavimento:i.pavimento, quantidade:i.quantidade,
+              unidade:i.unidade, obs:i.obs,
+              servicoFinal: i.servico==="Outro" ? i.servicoCustom : i.servico};
+    })
+  };
+  registros.unshift(reg);
+  exportado = false;
+  construirEnviado();
+  mostrar("pg3");
+}
+
+function construirEnviado(){
+  var total = registros.reduce(function(s,r){return s+r.itens.length;},0);
+  var html = '<div class="sucbox"><div class="sucico">✓</div>';
+  html += '<p class="suctit">Registro enviado!</p>';
+  html += '<p class="sucsub">'+equipe+' · '+formatarData(dataSel)+'</p>';
+  html += '<p class="sucsub">'+itens.length+' serviço(s) registrado(s)</p>';
+  html += '<div style="margin-top:24px;display:flex;flex-direction:column;gap:12px">';
+  html += '<button class="btn" onclick="novoRegistro()">+ Novo registro</button>';
+  html += '<button class="btn-sec" style="margin-top:0;width:100%" onclick="verRegistros()">Ver registros do dia</button>';
+  html += '</div></div>';
+  html += '<div class="expcard">';
+  html += '<p class="exptit">📋 '+registros.length+' registro(s) · '+total+' serviço(s)</p>';
+  html += '<p class="expsub">Exporte o CSV e mande para a gestora pelo WhatsApp</p>';
+  html += '<button class="btn-exp'+(exportado?' ok':'')+'" onclick="exportarCSV()">'+(exportado?'✓ CSV exportado':'⬇ Exportar CSV')+'</button>';
+  if(exportado) html += '<p class="expdica">Arquivo salvo — abra no Excel ou mande por WhatsApp.</p>';
+  html += '</div>';
+  if(registros.length > 0){
+    html += '<span class="sec">Registros de hoje</span>';
+    registros.forEach(function(r){
+      html += '<div class="rcard">';
+      html += '<div style="display:flex;justify-content:space-between"><span style="font-size:13px;font-weight:700">'+r.equipe+'</span><span style="font-size:12px;color:#888">'+formatarData(r.data)+'</span></div>';
+      html += '<span style="display:block;font-size:12px;color:#666;margin:2px 0 8px">'+r.responsavel+'</span>';
+      r.itens.forEach(function(it){
+        html += '<div style="display:flex;gap:8px;align-items:center;padding:4px 0;border-top:1px solid #F5F4F0">';
+        html += '<span style="font-size:12px;flex:1;color:#333">'+it.servicoFinal+'</span>';
+        html += '<span style="font-size:11px;color:#888">'+it.pavimento+'</span>';
+        html += '<span style="font-size:12px;font-weight:700;color:#1A5C3A">'+it.quantidade+' '+it.unidade+'</span></div>';
+      });
+      html += '</div>';
+    });
+  }
+  document.getElementById("enviado-conteudo").innerHTML = html;
+}
+
+function novoRegistro(){
+  equipe=""; dataSel=new Date().toISOString().split("T")[0]; nome=""; itens=[]; exportado=false;
+  document.getElementById("s-equipe").value="";
+  document.getElementById("s-data").value=dataSel;
+  document.getElementById("s-nome").value="";
+  contadorId=0;
+  adicionarItem();
+  mostrar("pg0");
+}
+
+function verRegistros(){
+  construirEnviado();
+  mostrar("pg3");
+}
+
+// ── CSV ───────────────────────────────────────────────────────────────────
+function exportarCSV(){
+  var rows=[["Data","Equipe","Responsavel","Servico","Pavimento","Quantidade","Unidade","Observacao"]];
+  registros.forEach(function(r){
+    r.itens.forEach(function(it){
+      rows.push([r.data,r.equipe,r.responsavel,it.servicoFinal,it.pavimento,it.quantidade,it.unidade,it.obs||""]);
+    });
+  });
+  var csv=rows.map(function(r){return r.map(function(c){return'"'+String(c).replace(/"/g,'""')+'"';}).join(";");}).join("\n");
+  var blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  var url=URL.createObjectURL(blob);
+  var a=document.createElement("a");
+  a.href=url;
+  a.download="producao_"+new Date().toLocaleDateString("pt-BR").replace(/\//g,"-")+".csv";
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
+  URL.revokeObjectURL(url);
+  exportado=true;
+  construirEnviado();
+}
+
+// ── UTILITÁRIOS ───────────────────────────────────────────────────────────
+function formatarData(d){
+  if(!d) return "";
+  var p=d.split("-");
+  return p[2]+"/"+p[1]+"/"+p[0];
+}
+</script>
+</body>
+</html>
