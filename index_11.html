@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<meta name="theme-color" content="#1A1A18">
+<title>Interproj — Registro de Produção</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Helvetica Neue',Arial,sans-serif;background:#F5F4F0;min-height:100vh}
+#app{max-width:480px;margin:0 auto;padding-bottom:40px;min-height:100vh}
+.hdr{background:#1A1A18;color:#fff;padding:20px 20px 0}
+.hdr-top{display:flex;justify-content:space-between;align-items:center}
+.hdr-title{font-size:13px;font-weight:700;letter-spacing:.15em;color:#E8C547}
+.hdr-badge{font-size:11px;background:#333;color:#ccc;padding:2px 8px;border-radius:20px}
+.hdr-sub{font-size:18px;font-weight:500;margin:6px 0 16px;color:#fff}
+.steps{display:flex;border-top:1px solid #333;padding:12px 0 16px}
+.step{flex:1;display:flex;align-items:center;gap:6px;opacity:.4}
+.step.active{opacity:1}.step.done{opacity:.7}
+.dot{width:22px;height:22px;border-radius:50%;background:#333;color:#999;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0}
+.dot.active{background:#E8C547;color:#1A1A18}.dot.done{background:#4CAF82;color:#fff}
+.slbl{font-size:11px;color:#ccc}
+.ctx{display:flex;justify-content:space-between;padding:8px 16px;background:#fff;border-bottom:1px solid #E5E4E0;margin-bottom:12px}
+.ctx span{font-size:12px;color:#666;font-weight:500}
+.card{background:#fff;margin:0 12px 12px;border-radius:12px;padding:16px;border:1px solid #E5E4E0}
+.ctitle{font-size:14px;font-weight:700;margin:0 0 16px;color:#1A1A18;text-transform:uppercase;letter-spacing:.05em}
+label{display:block;font-size:11px;font-weight:700;color:#666;margin:12px 0 4px;text-transform:uppercase;letter-spacing:.05em}
+select,input{width:100%;padding:11px 12px;font-size:15px;border:1.5px solid #E0DFD8;border-radius:8px;background:#FAFAF8;font-family:inherit;color:#1A1A18;appearance:none;outline:none}
+.btn-p{width:100%;padding:14px;font-size:15px;font-weight:700;background:#E8C547;color:#1A1A18;border:none;border-radius:10px;cursor:pointer;margin-top:16px}
+.btn-p:disabled{background:#DDD;color:#999;cursor:not-allowed}
+.btn-s{padding:14px 20px;font-size:14px;font-weight:600;background:#fff;color:#1A1A18;border:1.5px solid #E0DFD8;border-radius:10px;cursor:pointer;margin-top:16px}
+.btn-add{width:calc(100% - 24px);margin:8px 12px 0;padding:12px;font-size:14px;font-weight:600;background:transparent;color:#1A1A18;border:2px dashed #D0CFC8;border-radius:10px;cursor:pointer}
+.btn-rem{font-size:11px;color:#E05555;background:none;border:none;cursor:pointer;font-weight:600}
+.btn-exp{width:100%;padding:13px;font-size:14px;font-weight:700;background:#1A1A18;color:#E8C547;border:none;border-radius:10px;cursor:pointer}
+.btn-exp.ok{background:#4CAF82;color:#fff}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.icard{background:#fff;margin:0 12px 10px;border-radius:12px;padding:16px;border:1px solid #E5E4E0}
+.inum{font-size:12px;font-weight:700;color:#999;text-transform:uppercase}
+.srow{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid #F0EFE8}
+.sl{font-size:13px;color:#888}.sv{font-size:13px;font-weight:600;color:#1A1A18}
+.si{padding:10px 0;border-top:1px solid #F0EFE8}.si:first-child{border:none}
+.sitop{display:flex;justify-content:space-between}
+.siserv{font-size:14px;font-weight:600;color:#1A1A18;flex:1}
+.siqtd{font-size:14px;font-weight:700;color:#1A5C3A;margin-left:12px}
+.tags{display:flex;gap:8px;margin-top:4px;flex-wrap:wrap}
+.tag{font-size:11px;background:#F0EFE8;color:#555;padding:2px 8px;border-radius:20px;font-weight:600}
+.tago{background:#FFF8E1;color:#7A5C00}
+.sucbox{background:#fff;margin:40px 20px 0;border-radius:16px;padding:32px 24px;text-align:center;border:1px solid #E5E4E0}
+.sucico{width:56px;height:56px;border-radius:50%;background:#4CAF82;color:#fff;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:700;margin:0 auto 16px}
+.suctit{font-size:22px;font-weight:700;color:#1A1A18;margin-bottom:8px}
+.sucsub{font-size:14px;color:#888;margin:4px 0}
+.expcard{background:#fff;margin:12px 12px 0;border-radius:12px;padding:16px;border:2px solid #E8C547}
+.expinfo{display:flex;align-items:flex-start;gap:12px;margin-bottom:12px}
+.expico{font-size:24px;flex-shrink:0}
+.exptit{font-size:14px;font-weight:700;color:#1A1A18;margin-bottom:2px}
+.expsub{font-size:12px;color:#888}
+.expdica{font-size:12px;color:#666;margin-top:10px;background:#F5F4F0;border-radius:8px;padding:8px 12px;line-height:1.5}
+.rcard{background:#fff;margin:8px 12px;border-radius:10px;padding:12px;border:1px solid #E5E4E0}
+.req{font-size:13px;font-weight:700;color:#1A1A18}
+.rdt{font-size:12px;color:#888}
+.rresp{display:block;font-size:12px;color:#666;margin:2px 0 8px}
+.ritem{display:flex;gap:8px;align-items:center;padding:4px 0;border-top:1px solid #F5F4F0}
+.rserv{font-size:12px;flex:1;color:#333}
+.rpav{font-size:11px;color:#888}
+.rqtd{font-size:12px;font-weight:700;color:#1A5C3A}
+.sec{font-size:11px;font-weight:700;color:#666;text-transform:uppercase;letter-spacing:.05em;padding:0 16px;margin-top:16px;display:block}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<script>
+const EQUIPES=["ADM/APOIO","Segurança","Cobé","Ivan","Adailton e Marcelo","Wedson e Rodrigues","Poço do Elevador","Marciel e Arlindo","Manoel Gorgonho","Fachada 01","Fachada 02","Fachada 04","Fachada 05","Fachada 06","Fachada 07","Tratamento Garagens","Logística","Abastecimento","Escadas"];
+const SERVICOS=["Reboco interno","Chapisco","Emestramento","Capiaço","Alvenaria interna","Alvenaria externa","Revestimento cerâmico","Contra piso","Forro","Reboco fachada","Tratamento de concreto","Serviços de liberação de gesso","Abertura de nicho","Serviços hidrossanitários","Serviços elétricos","Serviços de acabamento","Outro"];
+const UNIDADES=["m²","m","un","vb","diária","pct"];
+const PAVIMENTOS=["Térreo","Garagem","Pav. 1","Pav. 2","Pav. 3","Pav. 4","Pav. 5","Pav. 6","Pav. 7","Pav. 8","Pav. 9","Pav. 10","Pav. 11","Pav. 12","Pav. 13","Pav. 14","Pav. 15","Pav. 16","Pav. 17","Pav. 18","Pav. 19","Pav. 20","Pav. 21","Pav. 22","Pav. 23","Pav. 24","Pav. 25","Pav. 26","Pav. 27","Pav. 28","Cobertura","Área externa","Fachada"];
+const hoje=new Date().toISOString().split("T")[0];
+
+// Estado — tudo em variáveis simples, sem framework
+let step=0, equipe="", data=hoje, resp="", enviado=false, exportado=false;
+let registros=[];
+let itens=[ni()];
+
+function ni(){return{id:"i"+Date.now()+Math.floor(Math.random()*9999),servico:"",servicoCustom:"",pavimento:"",unidade:"m²",quantidade:"",obs:""};}
+function fd(d){if(!d)return"";const[y,m,dd]=d.split("-");return`${dd}/${m}/${y}`;}
+function opts(arr,val){return arr.map(v=>`<option${val===v?" selected":""}>${v}</option>`).join("");}
+
+// Lê TODOS os campos do DOM e salva no estado antes de qualquer render
+function salvarTudo(){
+  // Step 0
+  const r=document.getElementById("f-resp");
+  const e=document.getElementById("f-eq");
+  const d=document.getElementById("f-dt");
+  if(r)resp=r.value;
+  if(e)equipe=e.value;
+  if(d)data=d.value;
+  // Step 1 — cada item tem campos com data-idx
+  document.querySelectorAll(".icard").forEach((card,idx)=>{
+    if(!itens[idx])return;
+    const sv=card.querySelector("[data-f='servico']");
+    const sc=card.querySelector("[data-f='servicoCustom']");
+    const pv=card.querySelector("[data-f='pavimento']");
+    const un=card.querySelector("[data-f='unidade']");
+    const qt=card.querySelector("[data-f='quantidade']");
+    const ob=card.querySelector("[data-f='obs']");
+    if(sv)itens[idx].servico=sv.value;
+    if(sc)itens[idx].servicoCustom=sc.value;
+    if(pv)itens[idx].pavimento=pv.value;
+    if(un)itens[idx].unidade=un.value;
+    if(qt)itens[idx].quantidade=qt.value;
+    if(ob)itens[idx].obs=ob.value;
+  });
+}
+
+function render(){
+  document.getElementById("app").innerHTML=
+    step===0?pg0():step===1?pg1():step===2?pg2():pgEnv();
+  if(step===2)bindPg2();
+}
+
+function hdr(){
+  return`<div class="hdr">
+    <div class="hdr-top"><span class="hdr-title">INTERPROJ</span><span class="hdr-badge">Campo</span></div>
+    <p class="hdr-sub">Registro de Produção Diária</p>
+    <div class="steps">${["Identificação","Serviços","Resumo"].map((l,i)=>`
+      <div class="step${i===step?" active":i<step?" done":""}">
+        <div class="dot${i===step?" active":i<step?" done":""}">${i<step?"✓":i+1}</div>
+        <span class="slbl">${l}</span>
+      </div>`).join("")}</div>
+  </div>`;
+}
+
+function pg0(){
+  return hdr()+`<div class="card">
+    <p class="ctitle">Identificação</p>
+    <label>Equipe</label>
+    <select id="f-eq" onchange="equipe=this.value;render()">
+      <option value="">Selecione a equipe...</option>${opts(EQUIPES,equipe)}
+    </select>
+    <label>Data</label>
+    <input type="date" id="f-dt" value="${data}" onchange="data=this.value">
+    <label>Seu nome</label>
+    <input type="text" id="f-resp" value="${resp}" placeholder="Quem está registrando..." autocomplete="off">
+    <button class="btn-p" onclick="avancar0()">Continuar →</button>
+  </div>`;
+}
+
+function avancar0(){
+  resp=document.getElementById("f-resp").value;
+  data=document.getElementById("f-dt").value;
+  if(!equipe){alert("Selecione a equipe!");return;}
+  if(!resp){alert("Digite seu nome!");return;}
+  step=1;render();
+}
+
+function pg1(){
+  const ctx=`<div class="ctx"><span>${equipe}</span><span>${fd(data)}</span></div>`;
+  const cards=itens.map((it,idx)=>`
+    <div class="icard">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+        <span class="inum">Serviço ${idx+1}</span>
+        ${itens.length>1?`<button class="btn-rem" onclick="remItem(${idx})">✕ remover</button>`:""}
+      </div>
+      <label>Tipo de serviço</label>
+      <select data-f="servico" onchange="salvarTudo();itens[${idx}].servico=this.value;render()">
+        <option value="">Selecione...</option>${opts(SERVICOS,it.servico)}
+      </select>
+      ${it.servico==="Outro"?`
+        <label>Descreva o serviço</label>
+        <input type="text" data-f="servicoCustom" value="${it.servicoCustom}" placeholder="Ex: Emboço área molhada" autocomplete="off">
+      `:""}
+      <label>Pavimento / local</label>
+      <select data-f="pavimento" onchange="salvarTudo();itens[${idx}].pavimento=this.value;render()">
+        <option value="">Selecione...</option>${opts(PAVIMENTOS,it.pavimento)}
+      </select>
+      <div class="grid2">
+        <div>
+          <label>Quantidade</label>
+          <input type="number" data-f="quantidade" inputmode="decimal" placeholder="0" value="${it.quantidade}" autocomplete="off">
+        </div>
+        <div>
+          <label>Unidade</label>
+          <select data-f="unidade" onchange="salvarTudo();itens[${idx}].unidade=this.value">
+            ${opts(UNIDADES,it.unidade)}
+          </select>
+        </div>
+      </div>
+      <label>Observações <span style="font-weight:400;color:#999">(opcional)</span></label>
+      <input type="text" data-f="obs" value="${it.obs}" placeholder="Ex: apartamento 1402..." autocomplete="off">
+    </div>`).join("");
+
+  const ok=itens.every(i=>i.servico&&i.pavimento&&i.quantidade&&parseFloat(i.quantidade)>0);
+  return hdr()+ctx+cards+`
+    <button class="btn-add" onclick="addItem()">+ Adicionar serviço</button>
+    <div style="display:flex;gap:12px;margin:16px 12px 0">
+      <button class="btn-s" onclick="salvarTudo();step=0;render()">← Voltar</button>
+      <button class="btn-p" style="flex:1;margin-top:0" onclick="avancar1()">Revisar →</button>
+    </div>`;
+}
+
+function addItem(){salvarTudo();itens.push(ni());render();}
+function remItem(idx){salvarTudo();itens.splice(idx,1);render();}
+
+function avancar1(){
+  salvarTudo();
+  for(let i=0;i<itens.length;i++){
+    const it=itens[i];
+    if(!it.servico){alert("Serviço "+(i+1)+": selecione o tipo de serviço!");return;}
+    if(!it.pavimento){alert("Serviço "+(i+1)+": selecione o pavimento!");return;}
+    if(!it.quantidade||parseFloat(it.quantidade)<=0){alert("Serviço "+(i+1)+": informe a quantidade!");return;}
+  }
+  step=2;render();
+}
+
+function pg2(){
+  const ctx=`<div class="ctx"><span>${equipe}</span><span>${fd(data)}</span></div>`;
+  const sum=`<div class="card"><p class="ctitle">Resumo do registro</p>
+    <div class="srow"><span class="sl">Responsável</span><span class="sv">${resp}</span></div>
+    <div class="srow"><span class="sl">Equipe</span><span class="sv">${equipe}</span></div>
+    <div class="srow"><span class="sl">Data</span><span class="sv">${fd(data)}</span></div>
+    <div class="srow" style="border:none"><span class="sl">Serviços</span><span class="sv">${itens.length}</span></div>
+  </div>`;
+  const servs=`<div class="card"><p class="ctitle">Serviços executados</p>
+    ${itens.map(it=>`<div class="si">
+      <div class="sitop">
+        <span class="siserv">${it.servico==="Outro"?it.servicoCustom:it.servico}</span>
+        <span class="siqtd">${it.quantidade} ${it.unidade}</span>
+      </div>
+      <div class="tags"><span class="tag">${it.pavimento}</span>${it.obs?`<span class="tag tago">${it.obs}</span>`:""}</div>
+    </div>`).join("")}
+  </div>`;
+  return hdr()+ctx+sum+servs+`
+    <div style="display:flex;gap:12px;margin:0 12px">
+      <button class="btn-s" onclick="step=1;render()">← Editar</button>
+      <button class="btn-p" style="flex:1;margin-top:0" id="btn-confirmar">✓ Confirmar envio</button>
+    </div>`;
+}
+
+function bindPg2(){
+  const btn=document.getElementById("btn-confirmar");
+  if(btn){btn.addEventListener("click",function(){confirmar();});}
+}
+
+function confirmar(){
+  if(!equipe||!resp||itens.length===0){alert("Dados incompletos!");return;}
+  registros.unshift({id:Date.now(),equipe,data,responsavel:resp,
+    itens:itens.map(i=>({...i,servicoFinal:i.servico==="Outro"?i.servicoCustom:i.servico}))});
+  enviado=true;exportado=false;render();
+}
+
+function pgEnv(){
+  const total=registros.reduce((s,r)=>s+r.itens.length,0);
+  const regs=registros.map(r=>`<div class="rcard">
+    <div style="display:flex;justify-content:space-between"><span class="req">${r.equipe}</span><span class="rdt">${fd(r.data)}</span></div>
+    <span class="rresp">${r.responsavel}</span>
+    ${r.itens.map(it=>`<div class="ritem"><span class="rserv">${it.servicoFinal}</span><span class="rpav">${it.pavimento}</span><span class="rqtd">${it.quantidade} ${it.unidade}</span></div>`).join("")}
+  </div>`).join("");
+  return`<div class="sucbox">
+    <div class="sucico">✓</div>
+    <p class="suctit">Registro enviado!</p>
+    <p class="sucsub">${equipe} · ${fd(data)}</p>
+    <p class="sucsub">${itens.length} serviço(s) registrado(s)</p>
+    <div style="margin-top:24px;display:flex;flex-direction:column;gap:12px">
+      <button class="btn-p" onclick="novoReg()">+ Novo registro</button>
+      <button class="btn-s" onclick="enviado=false;render()">Ver registros do dia</button>
+    </div>
+  </div>
+  <div class="expcard">
+    <div class="expinfo"><span class="expico">📋</span>
+      <div><p class="exptit">${registros.length} registro(s) · ${total} serviço(s)</p>
+      <p class="expsub">Exporte o CSV e mande para a gestora pelo WhatsApp</p></div>
+    </div>
+    <button class="btn-exp${exportado?" ok":""}" onclick="exportCSV()">${exportado?"✓ CSV exportado":"⬇ Exportar CSV"}</button>
+    ${exportado?`<p class="expdica">Arquivo salvo — abra no Excel ou mande por WhatsApp para a gestora.</p>`:""}
+  </div>
+  ${registros.length?`<span class="sec">Registros de hoje</span>${regs}`:""}`;
+}
+
+function novoReg(){
+  step=0;equipe="";data=hoje;resp="";itens=[ni()];enviado=false;render();
+}
+
+function exportCSV(){
+  const rows=[["Data","Equipe","Responsavel","Servico","Pavimento","Quantidade","Unidade","Observacao"]];
+  registros.forEach(r=>r.itens.forEach(it=>rows.push([r.data,r.equipe,r.responsavel,it.servicoFinal,it.pavimento,it.quantidade,it.unidade,it.obs||""])));
+  const csv=rows.map(r=>r.map(c=>`"${String(c).replace(/"/g,'""')}"`).join(";")).join("\n");
+  const blob=new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=`producao_${new Date().toLocaleDateString("pt-BR").replace(/\//g,"-")}.csv`;
+  a.click();URL.revokeObjectURL(url);
+  exportado=true;render();
+}
+
+render();
+</script>
+</body>
+</html>
